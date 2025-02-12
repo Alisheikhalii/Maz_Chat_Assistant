@@ -1,0 +1,190 @@
+<!--
+index.html
+This is the main HTML template for the application.
+It contains the layout for the chat interface, sidebar for chat history, file upload, 
+and input elements. The page also integrates MathJax for rendering LaTeX formulas.
+-->
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>دستیار هوشمند ماز</title>
+  <!-- Link to external stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!-- Polyfill for ES6 features -->
+  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+  <!-- Include MathLive for math input support -->
+  <script defer src="//unpkg.com/mathlive"></script>
+  <script>
+    // Configuration for MathJax to render LaTeX formulas properly
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        packages: {'[+]': ['ams']}
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <!-- Load MathJax from CDN -->
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <!-- Font Awesome icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* Inline CSS for file list styles in the chat input area */
+    .file-list {
+      margin-top: 10px;
+      border-top: 1px solid #555;
+      padding-top: 10px;
+    }
+    .file-list-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px;
+      background: #444654;
+      border-radius: 8px;
+      margin: 5px 0;
+    }
+    .file-icon {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Menu toggle for mobile view -->
+    <div class="menu-toggle" onclick="toggleSidebar()">
+      <i class="fas fa-bars" id="menu-icon"></i>
+    </div>
+    <!-- Overlay for sidebar on mobile devices -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+    <!-- Sidebar for chat history -->
+    <div class="sidebar" id="sidebar">
+      <div class="header">
+        <h1>تاریخچه گفتگوها</h1>
+        <!-- Button to start a new chat -->
+        <button class="new-chat" onclick="newChat()">+ گفتگوی جدید</button>
+      </div>
+      <div class="chat-history">
+        <!-- Loop through session chat history and display truncated messages -->
+        {% for chat in session.current_chat %}
+        <div class="chat-item" onclick="selectChat(this)">{{ chat.content|truncate(30) }}</div>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- Main chat area -->
+    <div class="main">
+      <div class="chat-header">
+        <!-- Logo image -->
+        <img src="{{ url_for('static', filename='logo.png') }}" class="header-logo" alt="لوگو ماز">
+        <h2>دستیار هوشمند ماز</h2>
+      </div>
+      <!-- Chat container to display messages -->
+      <div class="chat-container" id="chat-container">
+        <!-- Loop through session chat messages and display them -->
+        {% for message in session.current_chat %}
+        <div class="message {{ message.role }}">
+          {{ message.content }}
+        </div>
+        {% endfor %}
+      </div>
+      
+      <!-- Input container for sending new messages -->
+      <div class="input-container">
+        <div class="text-input-wrapper">
+          <!-- File preview area for attached files -->
+          <div class="file-preview" id="file-preview"></div>
+          <!-- Textarea for message input -->
+          <textarea id="message-input" placeholder="پیام خود را وارد کنید..." rows="1"></textarea>
+          
+          <!-- Math editor container (hidden by default) -->
+          <div id="math-editor-container" style="display: none;">
+            <div class="math-editor-header">
+              <span>ادیتور فرمول</span>
+              <button id="close-math-editor" class="math-editor-close">×</button>
+            </div>
+            <!-- MathLive field for entering LaTeX formulas -->
+            <math-field id="math-editor" placeholder="\text{... فرمول ریاضی خود را وارد کنید }"></math-field>
+            <button id="insert-math-formula">افزودن فرمول</button>
+          </div>
+        </div>
+        
+        <!-- Hidden file input for uploading files -->
+        <input type="file" id="file-input" name="files" multiple accept=".pdf,.png,.jpg,.jpeg" style="display:none;">
+        
+        <!-- Popup menu toggle button -->
+        <button id="popup-menu-toggle" class="popup-menu-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <!-- Send button -->
+        <button id="send-button" class="send-button">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+        
+        <!-- Popup menu for additional actions (file upload, math editor, voice input) -->
+        <div id="popup-menu" class="popup-menu">
+          <div class="popup-item" id="popup-file">
+            <i class="fas fa-paperclip"></i>
+            <span>آپلود فایل</span>
+          </div>
+          <div class="popup-item" id="popup-math">
+            <i class="fas fa-square-root-alt"></i>
+            <span>فرمول ریاضی</span>
+          </div>
+          <div class="popup-item" id="popup-voice">
+            <i class="fas fa-microphone"></i>
+            <span>گفتار به متن</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Inline script for sidebar and new chat functionality -->
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      const menuIcon = document.getElementById('menu-icon');
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+      if (sidebar.classList.contains('active')) {
+        menuIcon.classList.replace('fa-bars', 'fa-times');
+      } else {
+        menuIcon.classList.replace('fa-times', 'fa-bars');
+      }
+    }
+    function closeSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      const menuIcon = document.getElementById('menu-icon');
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      menuIcon.classList.replace('fa-times', 'fa-bars');
+    }
+    function newChat() {
+      // Call the new chat endpoint and reload the page
+      fetch('/new-chat', { method: 'POST' })
+        .then(() => window.location.reload());
+    }
+    function selectChat(chatItem) {
+      // Scroll the chat container to the selected chat message
+      const chatContainer = document.getElementById('chat-container');
+      const chatItems = chatContainer.children;
+      for (let i = 0; i < chatItems.length; i++) {
+        if (chatItems[i].textContent === chatItem.textContent) {
+          chatContainer.scrollTop = chatItems[i].offsetTop - chatContainer.offsetTop;
+          break;
+        }
+      }
+      closeSidebar();
+    }
+  </script>
+  <!-- External JavaScript file for handling chat functionalities -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

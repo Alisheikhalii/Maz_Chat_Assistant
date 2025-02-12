@@ -1,0 +1,435 @@
+/* style.css */
+/* Global CSS styles for the Metis WebUI project */
+
+/* Define CSS variables for keyboard and keycap styling */
+:root {
+  --keyboard-zindex: 3000;
+  --keycap-height: 24px;
+  --keycap-font-size: 16px;
+  --keycap-gap: 1px;
+}
+
+/* Reset margin, padding and set default box-sizing and font */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Set the body background and text color, with RTL direction */
+body {
+  background-color: #343541;
+  color: white;
+  direction: rtl;
+}
+
+/* Container for main layout */
+.container {
+  display: flex;
+  height: 100vh;
+  margin-right: 260px;
+  transition: margin-right 0.3s ease;
+}
+
+/* Sidebar styling (fixed on the right) */
+.sidebar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 260px;
+  background-color: #202123;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+/* Overlay for the sidebar in mobile view */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+}
+
+/* Main content area styling */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Logo in the header */
+.header-logo {
+  height: 50px;
+  width: auto;
+  margin-left: 15px;
+  vertical-align: middle;
+}
+
+/* Chat header styling */
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: #000000;
+  border-bottom: 1px solid #eee;
+}
+
+/* Wrapper for text input and file preview */
+.text-input-wrapper {
+  position: relative;
+  flex-grow: 1;
+}
+
+/* File preview area styling above the text input */
+.file-preview {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  background: #40414f;
+  padding: 5px 10px;
+  border-radius: 15px;
+  margin-bottom: 5px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  max-width: 300px;
+  flex-wrap: wrap;
+}
+
+/* Individual file preview item styling */
+.file-preview-item {
+  background: #343541;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Remove button style for file preview items */
+.file-preview-item .remove-btn {
+  color: #ff6b35;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+/* Chat container for displaying messages */
+.chat-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Base style for chat messages */
+.message {
+  margin: 1rem 0;
+  padding: 15px;
+  border-radius: 7px;
+  max-width: 80%;
+  word-break: break-word;
+  line-height: 1.6;
+  text-align: justify;
+  font-size: 16px;
+}
+
+/* User messages style (aligned right) */
+.message.user {
+  background-color: #444654;
+  margin-left: auto;
+}
+
+/* Assistant messages style */
+.message.assistant {
+  background-color: #343541;
+  border: 1px solid #343541;
+}
+
+/* Input container styling at the bottom */
+.input-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem;
+  gap: 0.5rem;
+  border-top: 1px solid #444;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Style for the text input area */
+#message-input {
+  width: 100%;
+  min-height: 60px;
+  height: 60px;
+  padding: 12px 20px;
+  border: 1px solid #444;
+  border-radius: 25px;
+  resize: none;
+  font-size: 16px;
+  line-height: 1.5;
+  color: white;
+  background-color: #40414f;
+  transition: all 0.3s;
+  font-family: 'Vazir', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Focus style for the text input */
+#message-input:focus {
+  outline: none;
+  border-color: #ff6b35;
+  box-shadow: 0 0 5px rgba(255,107,53,0.3);
+}
+
+/* Style for the send button */
+.send-button {
+  background-color: #ff6b35;
+  color: white;
+  border: none;
+  padding: 0 1.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: opacity 0.3s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.send-button:hover {
+  opacity: 0.9;
+}
+
+/* Style for the popup menu toggle button */
+.popup-menu-toggle {
+  background-color: #ff6b35;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Chat history items in the sidebar */
+.chat-history .chat-item {
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #343541;
+  transition: background 0.3s;
+}
+
+.chat-history .chat-item:hover {
+  background-color: #444654;
+}
+
+/* Style for the new chat button */
+.new-chat {
+  width: 100%;
+  padding: 0.8rem;
+  margin: 1rem 0;
+  background-color: #444654;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.new-chat:hover {
+  background-color: #343541;
+}
+
+/* Menu toggle for mobile view */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 10px;
+  left: 15px;
+  z-index: 1001;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  background: #40414f;
+  padding: 8px 12px;
+  border-radius: 50%;
+  transition: left 0.3s ease;
+}
+
+/* Typing indicator (for processing messages) */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  height: 20px;
+}
+
+.typing-indicator .dot {
+  animation: typing 1.4s infinite ease-in-out;
+  background-color: #fff;
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
+  margin: 0 3px;
+}
+
+.typing-indicator .dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-indicator .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Keyframes for typing animation */
+@keyframes typing {
+  0%, 60%, 100% {
+      transform: translateY(0);
+      opacity: 0.3;
+  }
+  30% {
+      transform: translateY(-5px);
+      opacity: 1;
+  }
+}
+
+/* Responsive styles for tablets and smaller screens */
+@media (max-width: 768px) {
+  .container {
+      margin-right: 0 !important;
+  }
+  
+  .sidebar {
+      right: -260px !important;
+      transition: right 0.3s ease;
+  }
+  
+  .sidebar.active {
+      right: 0 !important;
+  }
+  
+  .sidebar-overlay.active {
+      display: block;
+  }
+  
+  .menu-toggle {
+      display: block;
+  }
+  
+  .sidebar.active ~ .menu-toggle {
+      left: 275px;
+  }
+  
+  .message {
+      font-size: 14px;
+      padding: 10px;
+  }
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 480px) {
+  .chat-header h2 {
+      font-size: 16px;
+      margin-right: 10px;
+  }
+  
+  .header-logo {
+      height: 40px;
+  }
+  
+  .message {
+      font-size: 12px;
+      padding: 8px;
+  }
+  
+  #message-input {
+      min-height: 50px;
+      height: 50px;
+      padding: 8px 15px;
+  }
+  
+  .file-preview {
+      max-width: 200px;
+  }
+  
+  #math-editor-container {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      z-index: 2000;
+      margin: 0;
+      padding: 15px;
+  }
+  
+  math-field {
+      height: 100px !important;
+      font-size: 1rem !important;
+  }
+  
+  #insert-math-formula {
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+  }
+  
+  .input-container {
+      position: relative;
+      padding-bottom: 15px;
+      gap: 10px;
+  }
+  
+  .popup-menu-toggle,
+  .send-button {
+      flex-shrink: 0;
+  }
+}
+
+/* Styles for the popup menu within the input container */
+.popup-menu {
+  position: absolute;
+  bottom: 100%; /* Position above the popup-menu-toggle button */
+  left: 0;
+  background-color: #40414f;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  display: none;
+  flex-direction: column;
+  padding: 10px 0;
+  z-index: 1002;
+}
+
+.popup-item {
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.popup-item:hover {
+  background-color: #343541;
+}
+
+.popup-item i {
+  margin-left: 10px;
+}
