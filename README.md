@@ -1,6 +1,7 @@
 A smart chatbot designed to answer math and science questions, supporting text, voice, and image inputs. The Smart Assistant Project is an interactive AI chatbot designed to assist students in solving problems and understanding mathematical concepts and more. This system is specifically built to answer subject-specific mathematics questions and supports three different input methods:
 
-image
+![cc](https://github.com/user-attachments/assets/6c256020-1f50-40d9-92fc-4c6f0f9a2c8e)
+
 
 ├── static/ │ ├── uploads/ # Stores uploaded files (images, audio) │ ├── style.css # Styles for the UI │ ├── script.js # Handles user interactions │ └── logo.png # Project logo ├── templates/ │ └── index.html # Main web application page └── app.py # Main application file (Flask Backend) ├── README.md └── LICENSE
 
